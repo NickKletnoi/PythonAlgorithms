@@ -1,0 +1,123 @@
+ sentence = 'the rocket came back from mars'
+>>> vowels = [i for i in sentence if i in 'aeiou']
+>>> vowels
+['e', 'o', 'e', 'a', 'e', 'a', 'o', 'a']
+----------------------------------------------------------
+--------------------------------------------------
+ import random
+>>> import timeit
+>>> TAX_RATE = .08
+>>> txns = [random.randrange(100) for _ in range(100000)]
+>>> def get_price(txn):
+...     return txn * (1 + TAX_RATE)
+...
+>>> def get_prices_with_map():
+...     return list(map(get_price, txns))
+...
+>>> def get_prices_with_comprehension():
+...     return [get_price(txn) for txn in txns]
+...
+>>> def get_prices_with_loop():
+...     prices = []
+...     for txn in txns:
+...         prices.append(get_price(txn))
+...     return prices
+...
+>>> timeit.timeit(get_prices_with_map, number=100)
+2.0554370979998566
+>>> timeit.timeit(get_prices_with_comprehension, number=100)
+2.3982384680002724
+>>> timeit.timeit(get_prices_with_loop, number=100)
+3.0531821520007725
+
+---------------------------------------------------------
+ txns = [1.09, 23.56, 57.84, 4.56, 6.78]
+>>> TAX_RATE = .08
+>>> def get_price_with_tax(txn):
+...     return txn * (1 + TAX_RATE)
+>>> final_prices = [get_price_with_tax(i) for i in txns]
+>>> final_prices
+[1.1772000000000002, 25.4448, 62.467200000000005, 4.9248, 7.322400000000001]
+
+----------------------------------------------------------
+----------------------------------------------------------
+----------------------------------------------------------
+def get_price(price):
+...     return price if price > 0 else 0
+>>> prices = [get_price(i) for i in original_prices]
+>>> prices
+[1.25, 0, 10.22, 3.78, 0, 1.16]
+--------------------------------------
+--------------------------------------
+--------------------------------------
+>>> quote = "life, uh, finds a way"
+>>> unique_vowels = {i for i in quote if i in 'aeiou'}
+>>> unique_vowels
+{'a', 'e', 'u', 'i'}
+
+------------------------------------
+original_prices = [1.25, -9.45, 10.22, 3.78, -5.92, 1.16]
+>>> prices = [i if i > 0 else 0 for i in original_prices]
+>>> prices
+[1.25, 0, 10.22, 3.78, 0, 1.16]
+
+--------------------------------------------
+
+-------------------------------------------------------
+
+sentence = 'The rocket, who was named Ted, came back \
+... from Mars because he missed his friends.'
+>>> def is_consonant(letter):
+...     vowels = 'aeiou'
+...     return letter.isalpha() and letter.lower() not in vowels
+>>> consonants = [i for i in sentence if is_consonant(i)]
+['T', 'h', 'r', 'c', 'k', 't', 'w', 'h', 'w', 's', 'n', 'm', 'd', \
+'T', 'd', 'c', 'm', 'b', 'c', 'k', 'f', 'r', 'm', 'M', 'r', 's', 'b', \
+'c', 's', 'h', 'm', 's', 's', 'd', 'h', 's', 'f', 'r', 'n', 'd', 's']
+
+------------------------------------
+
+cities = ['Austin', 'Tacoma', 'Topeka', 'Sacramento', 'Charlotte']
+>>> temps = {city: [0 for _ in range(7)] for city in cities}
+>>> temps
+{
+    'Austin': [0, 0, 0, 0, 0, 0, 0],
+    'Tacoma': [0, 0, 0, 0, 0, 0, 0],
+    'Topeka': [0, 0, 0, 0, 0, 0, 0],
+    'Sacramento': [0, 0, 0, 0, 0, 0, 0],
+    'Charlotte': [0, 0, 0, 0, 0, 0, 0]
+}
+
+
+
+------------------------------------------------
+
+matrix = [[i for i in range(5)] for _ in range(6)]
+>>> matrix
+[
+    [0, 1, 2, 3, 4],
+    [0, 1, 2, 3, 4],
+    [0, 1, 2, 3, 4],
+    [0, 1, 2, 3, 4],
+    [0, 1, 2, 3, 4],
+    [0, 1, 2, 3, 4]
+]
+
+--------------------------------------
+
+matrix = [
+...     [0, 0, 0],
+...     [1, 1, 1],
+...     [2, 2, 2],
+... ]
+>>> flat = [num for row in matrix for num in row]
+>>> flat
+[0, 0, 0, 1, 1, 1, 2, 2, 2]
+
+----------------------------------------------------
+
+
+
+
+
+
