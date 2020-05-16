@@ -1,0 +1,25 @@
+import sys
+import math
+import _collections as de
+
+graph = { 'A': ['B','C'],
+          'B': ['A','C','D'],
+          'C': ['A','B','D','E'],
+          'D': ['B', 'C', 'E', 'F'],
+          'E': ['C', 'D', 'F'],
+          'F': ['D','E']
+         }
+
+def find_path(graph,start,end):
+    dist = {start:[start]}
+    q = de.deque(start)
+    while len(q):
+        at = q.popleft()
+        for next in graph[at]:
+            if next not in dist:
+                dist[next]= [dist[at],next]
+                q.append(next)
+    return dist.get(end)
+
+e=find_path(graph,'A','F')
+print(e)
