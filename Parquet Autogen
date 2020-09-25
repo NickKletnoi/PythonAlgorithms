@@ -1,0 +1,101 @@
+#################################################################################################################
+########### This solution consists of Two Pieces - database piece and the Python Piece ##########################
+#################################################################################################################
+
+*** this solution goes through all of the tables specifed by the user which have a flag of 'Y' for parquet file
+generation and produces a parquet file by way of running a source query that it dymaically fetches out of a 
+table (below) at run-time , executes and then places the file with the appropriate date-time stamped into a 
+folder of choice on the destination of choice; from that point the files just have to be transfered to ADLS 
+and referenced properly 
+
+--------- This is the source code for the main ParquetGenerator.Py ----------------------------------------------
+
+import Include
+import pyodbc
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+conString = Include.setConn()
+fileString = Include.setFile()
+sqlTblString = Include.setSQLTbls()
+fileTail = Include.setFileTail()
+conn = pyodbc.connect(conString)
+sqlTb = pd.read_sql(sqlTblString, conn)
+dfTbl = pd.DataFrame(data=sqlTb)
+for i, row in dfTbl.iterrows():
+    sql2 = pd.read_sql(row["ParquetExtractionSQL"], conn)
+    df9 = pd.DataFrame(data=sql2)
+    parquet_file = row["ParquetLocation"] + row["TgtSchName"] + "_" + row["TblName"] + fileTail
+    parquet_schema = pa.Table.from_pandas(df9).schema
+    parquet_writer = pq.ParquetWriter(parquet_file, parquet_schema, compression='snappy')
+    table = pa.Table.from_pandas(df9, parquet_schema)
+    parquet_writer.write_table(table)
+    print(parquet_file)
+    parquet_writer.close()
+conn.close()
+
+
+
+----------------- this is the code for the Include.py -----------------------------------
+
+from datetime import datetime
+
+def setConn():
+    conString = 'DSN=DEV;UID=ATFUser;PWD=############;MARS_Connection=Yes'
+    return conString
+def setSQLTbls():
+    sqlTblString = "select * from [codegen].[TblSynMeta] where [ParquetExportFlg]='Y'"
+    return sqlTblString
+def setFile():
+    fileString = 'pandas\data\EngagementProfile11.parquet'
+    return fileString
+def setFileTail():
+    dateTimeObj = datetime.now()
+    timestampStr = dateTimeObj.strftime("%m_%d_%Y_%H_%M_%S_%f")
+    fileTail = "_" + timestampStr + ".parquet"
+    return fileTail
+    
+    ------------------------------------------------------------------------
+    ###################################################################################################
+    ###################### Below is the source code for the corresponding Back piece ##################
+    ###################################################################################################
+    
+    CREATE TABLE [codegen].[TblSynMeta](
+	[SrcDbName] [varchar](200) NOT NULL,
+	[SrcSchName] [varchar](200) NOT NULL,
+	[TgtSchName] [varchar](200) NOT NULL,
+	[XltSchName] [varchar](200) NOT NULL,
+	[TblName] [varchar](200) NOT NULL,
+	[DistCol] [varchar](250) NOT NULL,
+	[DistType] [varchar](250) NOT NULL,
+	[Location] [varchar](250) NOT NULL,
+	[DataSource] [varchar](250) NOT NULL,
+	[FileFormat] [varchar](4000) NOT NULL,
+	[ParquetLocation] [varchar](4000) NOT NULL,
+	[ParquetExtractionSQL] [varchar](4000) NOT NULL,
+	[ParquetExportFlg] [varchar](1) NOT NULL,
+	[DropGenFlg] [varchar](1) NOT NULL
+) ON [PRIMARY]
+GO
+INSERT [codegen].[TblSynMeta] ([SrcDbName], [SrcSchName], [TgtSchName], [XltSchName], [TblName], [DistCol], [DistType], [Location], [DataSource], [FileFormat], [ParquetLocation], [ParquetExtractionSQL], [ParquetExportFlg], [DropGenFlg]) VALUES (N'Engagement', N'dbo', N'Engagement', N'xlt_Engagement', N'Engagement', N'EngagementID', N'H', N'/Engagement.Engagement/', N'[ds_adls_assurance]', N'[parquetfile]', N'Pandas\data\Engagement\', N'Select top 100 * From dbo.Engagement', N'Y', N'Y')
+GO
+INSERT [codegen].[TblSynMeta] ([SrcDbName], [SrcSchName], [TgtSchName], [XltSchName], [TblName], [DistCol], [DistType], [Location], [DataSource], [FileFormat], [ParquetLocation], [ParquetExtractionSQL], [ParquetExportFlg], [DropGenFlg]) VALUES (N'Engagement', N'dbo', N'Engagement', N'xlt_Engagement', N'EngagementCode', N'EngagementCodeID', N'RP', N'/Engagement.EngagementCode/', N'[ds_adls_assurance]', N'[parquetfile]', N'Pandas\data\EngagementCode\', N'Select top 100 * From dbo.EngagementCode', N'Y', N'Y')
+GO
+INSERT [codegen].[TblSynMeta] ([SrcDbName], [SrcSchName], [TgtSchName], [XltSchName], [TblName], [DistCol], [DistType], [Location], [DataSource], [FileFormat], [ParquetLocation], [ParquetExtractionSQL], [ParquetExportFlg], [DropGenFlg]) VALUES (N'Engagement', N'dbo', N'Engagement', N'xlt_Engagement', N'EngagementProfile', N'EngagementProfileID', N'RR', N'/Engagement.EngagementProfile/', N'[ds_adls_assurance]', N'[parquetfile]', N'Pandas\data\EngagementProfile\', N'Select top 100 * From dbo.EngagementProfile', N'Y', N'Y')
+GO
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
