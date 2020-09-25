@@ -1,0 +1,23 @@
+CREATE TABLE [codegen].[TblSynMeta](
+	[SrcDbName] [varchar](200) NOT NULL,
+	[SrcSchName] [varchar](200) NOT NULL,
+	[TgtSchName] [varchar](200) NOT NULL,
+	[XltSchName] [varchar](200) NOT NULL,
+	[TblName] [varchar](200) NOT NULL,
+	[DistCol] [varchar](250) NOT NULL,
+	[DistType] [varchar](250) NOT NULL,
+	[Location] [varchar](250) NOT NULL,
+	[DataSource] [varchar](250) NOT NULL,
+	[FileFormat] [varchar](4000) NOT NULL,
+	[ParquetLocation] [varchar](4000) NOT NULL,
+	[ParquetExtractionSQL] [varchar](4000) NOT NULL,
+	[ParquetExportFlg] [varchar](1) NOT NULL,
+	[DropGenFlg] [varchar](1) NOT NULL
+) ON [PRIMARY]
+GO
+INSERT [codegen].[TblSynMeta] ([SrcDbName], [SrcSchName], [TgtSchName], [XltSchName], [TblName], [DistCol], [DistType], [Location], [DataSource], [FileFormat], [ParquetLocation], [ParquetExtractionSQL], [ParquetExportFlg], [DropGenFlg]) VALUES (N'Engagement', N'dbo', N'Engagement', N'xlt_Engagement', N'Engagement', N'EngagementID', N'H', N'/Engagement.Engagement/', N'[ds_adls_assurance]', N'[parquetfile]', N'Pandas\data\Engagement\', N'Select top 100 * From dbo.Engagement', N'Y', N'Y')
+GO
+INSERT [codegen].[TblSynMeta] ([SrcDbName], [SrcSchName], [TgtSchName], [XltSchName], [TblName], [DistCol], [DistType], [Location], [DataSource], [FileFormat], [ParquetLocation], [ParquetExtractionSQL], [ParquetExportFlg], [DropGenFlg]) VALUES (N'Engagement', N'dbo', N'Engagement', N'xlt_Engagement', N'EngagementCode', N'EngagementCodeID', N'RP', N'/Engagement.EngagementCode/', N'[ds_adls_assurance]', N'[parquetfile]', N'Pandas\data\EngagementCode\', N'Select top 100 * From dbo.EngagementCode', N'Y', N'Y')
+GO
+INSERT [codegen].[TblSynMeta] ([SrcDbName], [SrcSchName], [TgtSchName], [XltSchName], [TblName], [DistCol], [DistType], [Location], [DataSource], [FileFormat], [ParquetLocation], [ParquetExtractionSQL], [ParquetExportFlg], [DropGenFlg]) VALUES (N'Engagement', N'dbo', N'Engagement', N'xlt_Engagement', N'EngagementProfile', N'EngagementProfileID', N'RR', N'/Engagement.EngagementProfile/', N'[ds_adls_assurance]', N'[parquetfile]', N'Pandas\data\EngagementProfile\', N'Select top 100 * From dbo.EngagementProfile', N'Y', N'Y')
+GO
