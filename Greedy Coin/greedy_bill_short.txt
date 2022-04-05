@@ -1,0 +1,17 @@
+import sys
+import math
+
+def change(amt,den):
+    chg = list()
+    
+    for bill in den:
+        while amt >= bill:
+           chg.append(bill)
+           amt = amt - bill
+    return chg
+     
+currency = [100,50,20,10,5,1]
+amount = 481
+
+print(change(amount,currency))
+
